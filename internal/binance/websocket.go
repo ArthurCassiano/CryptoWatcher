@@ -13,7 +13,7 @@ import (
 )
 
 // URL base do WebSocket da Binance
-const baseURL = "wss://stream.binance.com:9443/ws"
+const baseURL = "wss://fstream.binance.com"
 
 // StartWebSocket conecta ao WebSocket da Binance para receber preços em real time.
 // - pc: cache que irá armazenar os valores.
@@ -67,8 +67,9 @@ func StartWebSocket(pc *cache.PriceCache, symbols []string) {
             // 5) Dentro de Data, queremos apenas "s" e "c"
             var ticker struct {
                 Symbol string `json:"s"` // ex.: "BTCUSDT"
-                Price  string `json:"c"` // último preço, como string
+                Price  string `json:"p"` // último preço, como string
             }
+            log.Printf("[WebSocket] JSON recebido em payload.Data: %s", string(payload.Data))
             if err := json.Unmarshal(payload.Data, &ticker); err != nil {
                 log.Printf("[WebSocket] Erro ao parsear dados do ticker: %v", err)
                 continue
